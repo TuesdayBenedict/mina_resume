@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mina_resume/controllers/create_controller.dart';
 import 'package:mina_resume/widgets/footer/footer.dart';
 import 'package:mina_resume/widgets/how_it_works/how_it_works.dart';
 import 'package:mina_resume/widgets/landing_banner/landing_banner.dart';
@@ -10,6 +12,7 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scrollController = ScrollController();
+    Get.put(CreateController());
 
     return LayoutBuilder(
       builder: (context, constraints) {

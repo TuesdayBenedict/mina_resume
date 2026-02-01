@@ -1,6 +1,8 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mina_resume/controllers/create_controller.dart';
 
 class LandingBanner extends StatelessWidget {
   const LandingBanner({super.key, required this.constraints});
@@ -9,6 +11,8 @@ class LandingBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<CreateController>();
+
     final width = constraints.maxWidth;
 
     return Container(
@@ -54,6 +58,22 @@ class LandingBanner extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                  Obx(() {
+                    final response = controller.response.value;
+
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 600),
+                      child: SelectableText(
+                        response.isEmpty ? 'Waiting for response...' : response,
+                        style: GoogleFonts.inter(
+                          fontSize: width < 500 ? 15 : 18,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xff666f9c),
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -63,7 +83,7 @@ class LandingBanner extends StatelessWidget {
           // search input
           Container(
             decoration: BoxDecoration(
-              color: Colors.white, // Background color of the container
+              color: Colors.white,
               borderRadius: BorderRadius.circular(
                 12,
               ), // Optional: rounded corners
@@ -72,9 +92,9 @@ class LandingBanner extends StatelessWidget {
                   color: Colors.black.withOpacity(
                     0.1,
                   ), // Shadow color and transparency
-                  spreadRadius: 2, // How much the shadow expands
-                  blurRadius: 10, // Softness of the shadow
-                  offset: Offset(0, 4), // Position (x, y) relative to container
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
@@ -82,13 +102,14 @@ class LandingBanner extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white, // Background color of the container
+                    color: Colors.white,
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(12),
                     ), //
                   ),
                   padding: const EdgeInsets.all(35),
                   child: TextField(
+                    controller: controller.prompt,
                     decoration: InputDecoration.collapsed(
                       hintText:
                           'Paste your professional experience, education, and skills here...',
@@ -141,10 +162,12 @@ class LandingBanner extends StatelessWidget {
   }
 
   SizedBox createPortfolioButton() {
+    final controller = Get.find<CreateController>();
+
     return SizedBox(
       height: 40,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () => controller.parseResumeWithGemini(),
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xff3d84f5),
           elevation: 0,
